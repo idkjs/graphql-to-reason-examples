@@ -1,22 +1,19 @@
-module Clicks = {
-  let count = ref(0);
-  /* No need to explicitly type resolver, it will infer correct type later */
-  let resolver = (_node, _args, _context, _resolveInfo, _fieldInfo) =>
-    Js.Promise.make((~resolve, ~reject) => {
-      count := count^ + 1;
-      let result = {"payload": count^};
-      // resolve(. count^);
-      resolve(. result);
-    });
-};
+/*
+`Clicks.resolver` error:
 
-/* Clicks.resolver now infers SchemaTypes.Mutation.clicksCount type */
-// let mutationResolvers =
-//   SchemaTypes.Mutation.t(~click(~clickCount=Clicks.resolver),())
+Error: The function applied to this argument has type
+         (~click: GraphqlToReasonBasicExample.SchemaTypes.rootResolver(
+                  {. "payload": int},
+                   GraphqlToReasonBasicExample.SchemaTypes.click,
+                   GraphqlToReasonBasicExample.SchemaTypes.click)=?) =>
+         GraphqlToReasonBasicExample.SchemaTypes.Mutation.t
+This argument cannot be applied with label ~clicksCount
+
+ */
 let mutationResolvers =
   SchemaTypes.Mutation.t(~clicksCount=Clicks.resolver, ());
 
-// let mutationResolvers =SchemaTypes.Mutation.t(~click=(Clicks.resolver(_node, _args, _context, _resolveInfo, _fieldInfo=>unit)));
-  // SchemaTypes.Mutation.t(~click=Clicks.resolver, ());
-
 let resolvers = SchemaTypes.t(~mutation, ());
+
+// return resolvers
+resolvers;
